@@ -44,8 +44,10 @@ import curses
 import os
 import signal
 import time
+import math
 
 from geometry_msgs.msg import Twist, TwistStamped
+from ackermann_msgs.msg import AckermannDriveStamped
 import rclpy
 from rclpy.duration import Duration
 from rclpy.node import Node
@@ -127,22 +129,24 @@ class SimpleKeyTeleop(Node):
 
         self._interface = interface
 
-        self._publish_stamped_twist = self.declare_parameter('twist_stamped_enabled', False).value
+        self._publish_stamped_twist = self.declare_parameter('twist_stamped_enabled', True).value
 
         if self._publish_stamped_twist:
-            self._pub_cmd = self.create_publisher(TwistStamped, 'key_vel',
+            self._pub_cmd = self.create_publisher(AckermannDriveStamped, 'classic_output',
                                                   qos_profile_system_default)
         else:
             self._pub_cmd = self.create_publisher(Twist, 'key_vel', qos_profile_system_default)
 
-        self._hz = self.declare_parameter('hz', 10).value
+        self._hz = self.declare_parameter('hz', 20).value
 
-        self._forward_rate = self.declare_parameter('forward_rate', 0.8).value
-        self._backward_rate = self.declare_parameter('backward_rate', 0.5).value
+        self._forward_rate = self.declare_parameter('forward_rate', 1.0).value
+        self._backward_rate = self.declare_parameter('backward_rate', 1.0).value
         self._rotation_rate = self.declare_parameter('rotation_rate', 1.0).value
         self._last_pressed = {}
         self._angular = 0
         self._linear = 0
+        self._speed = 0.0
+        self._steering_angle = 0.0
 
     movement_bindings = {
         curses.KEY_UP:    (1,  0),
@@ -180,6 +184,17 @@ class SimpleKeyTeleop(Node):
         twist_stamped.twist.linear.x = linear
         twist_stamped.twist.angular.z = angular
         return twist_stamped
+    
+    def _make_ackermann_stamped(self, speed, angle):
+        ackermann_stamped = AckermannDriveStamped()
+        header = Header()
+        header.stamp = rclpy.clock.Clock().now().to_msg()
+        header.frame_id = 'key_teleop'
+
+        ackermann_stamped.header = header
+        ackermann_stamped.drive.speed = speed
+        ackermann_stamped.drive.steering_angle = math.radians(angle)
+        return ackermann_stamped
 
     def _set_velocity(self):
         now = self.get_clock().now()
@@ -187,19 +202,19 @@ class SimpleKeyTeleop(Node):
         for a in self._last_pressed:
             if now - self._last_pressed[a] < Duration(seconds=0.4):
                 keys.append(a)
-        linear = 0.0
-        angular = 0.0
+        speed = self._speed
+        angle = self._steering_angle
         for k in keys:
             l, a = self.movement_bindings[k]
-            linear += l
-            angular += a
-        if linear > 0:
-            linear = linear * self._forward_rate
+            speed += l
+            angle += a
+        if speed > 0:
+            speed = speed * self._forward_rate
         else:
-            linear = linear * self._backward_rate
-        angular = angular * self._rotation_rate
-        self._angular = angular
-        self._linear = linear
+            speed = 0
+        angle = angle * self._rotation_rate
+        self._speed = speed
+        self._steering_angle = angle
 
     def _key_pressed(self, keycode):
         if keycode == ord('q'):
@@ -211,12 +226,12 @@ class SimpleKeyTeleop(Node):
 
     def _publish(self):
         self._interface.clear()
-        self._interface.write_line(2, 'Linear: %f, Angular: %f' % (self._linear, self._angular))
+        self._interface.write_line(2, 'Speed: %f, Angle: %f' % (self._speed, self._steering_angle))
         self._interface.write_line(5, 'Use arrow keys to move, q to exit.')
         self._interface.refresh()
 
         if self._publish_stamped_twist:
-            twist = self._make_twist_stamped(self._linear, self._angular)
+            twist = self._make_ackermann_stamped(float(self._speed), self._steering_angle)
         else:
             twist = self._make_twist(self._linear, self._angular)
 
