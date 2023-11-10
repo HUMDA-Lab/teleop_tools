@@ -45,6 +45,8 @@ import os
 import signal
 import time
 import math
+import numpy as np 
+
 
 from geometry_msgs.msg import Twist, TwistStamped
 from ackermann_msgs.msg import AckermannDriveStamped
@@ -149,10 +151,10 @@ class SimpleKeyTeleop(Node):
         self._steering_angle = 0.0
 
     movement_bindings = {
-        curses.KEY_UP:    (1,  0),
-        curses.KEY_DOWN:  (-1,  0),
-        curses.KEY_LEFT:  (0,  1),
-        curses.KEY_RIGHT: (0, -1),
+        curses.KEY_UP:    (2,  0),
+        curses.KEY_DOWN:  (-2,  0),
+        curses.KEY_LEFT:  (0,  2.5),
+        curses.KEY_RIGHT: (0, -2.5),
     }
 
     def run(self):
@@ -200,7 +202,7 @@ class SimpleKeyTeleop(Node):
         now = self.get_clock().now()
         keys = []
         for a in self._last_pressed:
-            if now - self._last_pressed[a] < Duration(seconds=0.4):
+            if now - self._last_pressed[a] < Duration(seconds=0.01):
                 keys.append(a)
         speed = self._speed
         angle = self._steering_angle
@@ -214,7 +216,7 @@ class SimpleKeyTeleop(Node):
             speed = 0
         angle = angle * self._rotation_rate
         self._speed = speed
-        self._steering_angle = angle
+        self._steering_angle = np.clip(angle, -199, 199)
 
     def _key_pressed(self, keycode):
         if keycode == ord('q'):
