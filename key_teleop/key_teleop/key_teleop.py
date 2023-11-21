@@ -53,6 +53,7 @@ from ackermann_msgs.msg import AckermannDriveStamped
 import rclpy
 from rclpy.duration import Duration
 from rclpy.node import Node
+from std_msgs.msg import Int32
 from rclpy.qos import qos_profile_system_default
 from std_msgs.msg import Header
 
@@ -131,6 +132,8 @@ class SimpleKeyTeleop(Node):
 
         self._interface = interface
 
+        self.publisher_ = self.create_publisher(Int32, 'keyboard_key', 10)
+
         self._publish_stamped_twist = self.declare_parameter('twist_stamped_enabled', True).value
 
         if self._publish_stamped_twist:
@@ -139,7 +142,7 @@ class SimpleKeyTeleop(Node):
         else:
             self._pub_cmd = self.create_publisher(Twist, 'key_vel', qos_profile_system_default)
 
-        self._hz = self.declare_parameter('hz', 20).value
+        self._hz = self.declare_parameter('hz', 10).value
 
         self._forward_rate = self.declare_parameter('forward_rate', 1.0).value
         self._backward_rate = self.declare_parameter('backward_rate', 1.0).value
@@ -225,6 +228,10 @@ class SimpleKeyTeleop(Node):
             os.kill(os.getpid(), signal.SIGINT)
         elif keycode in self.movement_bindings:
             self._last_pressed[keycode] = self.get_clock().now()
+        else:
+            msg = Int32()
+            msg.data = keycode
+            self.publisher_.publish(msg)
 
     def _publish(self):
         self._interface.clear()
