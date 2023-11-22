@@ -134,31 +134,8 @@ class SimpleKeyTeleop(Node):
 
         self.publisher_ = self.create_publisher(Int32, 'keyboard_key', 10)
 
-        self._publish_stamped_twist = self.declare_parameter('twist_stamped_enabled', True).value
-
-        if self._publish_stamped_twist:
-            self._pub_cmd = self.create_publisher(AckermannDriveStamped, 'classic_output',
-                                                  qos_profile_system_default)
-        else:
-            self._pub_cmd = self.create_publisher(Twist, 'key_vel', qos_profile_system_default)
-
         self._hz = self.declare_parameter('hz', 10).value
-
-        self._forward_rate = self.declare_parameter('forward_rate', 1.0).value
-        self._backward_rate = self.declare_parameter('backward_rate', 1.0).value
-        self._rotation_rate = self.declare_parameter('rotation_rate', 1.0).value
         self._last_pressed = {}
-        self._angular = 0
-        self._linear = 0
-        self._speed = 0.0
-        self._steering_angle = 0.0
-
-    movement_bindings = {
-        curses.KEY_UP:    (2,  0),
-        curses.KEY_DOWN:  (-2,  0),
-        curses.KEY_LEFT:  (0,  2.5),
-        curses.KEY_RIGHT: (0, -2.5),
-    }
 
     def run(self):
         self._running = True
@@ -168,84 +145,41 @@ class SimpleKeyTeleop(Node):
                 if keycode is None:
                     break
                 self._key_pressed(keycode)
-            self._set_velocity()
             self._publish()
             # TODO(artivis) use Rate once available
             time.sleep(1.0/self._hz)
-
-    def _make_twist(self, linear, angular):
-        twist = Twist()
-        twist.linear.x = linear
-        twist.angular.z = angular
-        return twist
-
-    def _make_twist_stamped(self, linear, angular):
-        twist_stamped = TwistStamped()
-        header = Header()
-        header.stamp = rclpy.clock.Clock().now().to_msg()
-        header.frame_id = 'key_teleop'
-
-        twist_stamped.header = header
-        twist_stamped.twist.linear.x = linear
-        twist_stamped.twist.angular.z = angular
-        return twist_stamped
-    
-    def _make_ackermann_stamped(self, speed, angle):
-        ackermann_stamped = AckermannDriveStamped()
-        header = Header()
-        header.stamp = rclpy.clock.Clock().now().to_msg()
-        header.frame_id = 'key_teleop'
-
-        ackermann_stamped.header = header
-        ackermann_stamped.drive.speed = speed
-        ackermann_stamped.drive.steering_angle = math.radians(angle)
-        return ackermann_stamped
-
-    def _set_velocity(self):
-        now = self.get_clock().now()
-        keys = []
-        for a in self._last_pressed:
-            if now - self._last_pressed[a] < Duration(seconds=0.01):
-                keys.append(a)
-        speed = self._speed
-        angle = self._steering_angle
-        for k in keys:
-            l, a = self.movement_bindings[k]
-            speed += l
-            angle += a
-        if speed > 0:
-            speed = speed * self._forward_rate
-        else:
-            speed = 0
-        angle = angle * self._rotation_rate
-        self._speed = speed
-        self._steering_angle = np.clip(angle, -199, 199)
 
     def _key_pressed(self, keycode):
         if keycode == ord('q'):
             self._running = False
             # TODO(artivis) no rclpy.signal_shutdown ?
             os.kill(os.getpid(), signal.SIGINT)
-        elif keycode in self.movement_bindings:
-            self._last_pressed[keycode] = self.get_clock().now()
         else:
-            msg = Int32()
-            msg.data = keycode
-            self.publisher_.publish(msg)
+            self._last_pressed[keycode] = self.get_clock().now()
 
     def _publish(self):
-        self._interface.clear()
-        self._interface.write_line(2, 'Speed: %f, Angle: %f' % (self._speed, self._steering_angle))
-        self._interface.write_line(5, 'Use arrow keys to move, q to exit.')
-        self._interface.refresh()
-
-        if self._publish_stamped_twist:
-            twist = self._make_ackermann_stamped(float(self._speed), self._steering_angle)
+        now = self.get_clock().now()
+        keys = []
+        for a in self._last_pressed:
+            if now - self._last_pressed[a] < Duration(seconds=0.6):
+                keys.append(a)
+        if not keys:
+            self._interface.clear()
+            self._interface.write_line(2, 'Keycode: None')
+            self._interface.write_line(5, 'Use arrow keys to move, q to exit.')
+            self._interface.refresh()
+            msg = Int32()
+            msg.data = 0
+            self.publisher_.publish(msg)
         else:
-            twist = self._make_twist(self._linear, self._angular)
-
-        self._pub_cmd.publish(twist)
-
+            for keycode in keys:
+                self._interface.clear()
+                self._interface.write_line(2, 'Keycode: %d' % keycode)
+                self._interface.write_line(5, 'Use arrow keys to move, q to exit.')
+                self._interface.refresh()
+                msg = Int32()
+                msg.data = keycode
+                self.publisher_.publish(msg)
 
 def execute(stdscr):
     rclpy.init()
