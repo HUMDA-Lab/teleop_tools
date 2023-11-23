@@ -1,6 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Int32
+from humda_common.msg import ControlSignal
 
 class KeyboardTeleop(Node):
     def __init__(self):
@@ -10,10 +11,15 @@ class KeyboardTeleop(Node):
             'keyboard_key',
             self.keypress_callback,
             10)
+        self.control_publisher = self.create_publisher(
+            ControlSignal,
+            'teleop',
+            10
+        )
         self.throttle_ = 0.0
         self.brake_ = 0.0
         self.steering_ = 0.0
-        self.deltatime_ = 0.05
+        self.deltatime_ = 0.025
 
     def keypress_callback(self, msg):
         throttle_input = 1 if msg.data == 259 else 0
@@ -38,6 +44,19 @@ class KeyboardTeleop(Node):
             self.steering_ = self.rateLimitUpdate(steering_input,self.steering_,3.5)
         else:
             self.steering_ = self.rateLimitUpdate(steering_input,self.steering_,5.0)
+
+        control_msg = ControlSignal()
+
+        if self.throttle_ > 0:
+            control_msg.pedal_postion = self.throttle_
+        elif self.brake_ >0:
+            control_msg.pedal_postion = self.brake_
+        else:
+            control_msg.pedal_postion = 0.0
+        
+        control_msg.steering_angle = self.steering_
+
+        self.control_publisher.publish(control_msg)
 
     def rateLimitUpdate(self, yCur, yPrev, speed):
 
