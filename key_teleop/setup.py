@@ -41,6 +41,8 @@ setup(
     entry_points={
         'console_scripts': [
             'key_teleop = key_teleop.key_teleop:main',
+            'key_handler = key_teleop.key_handler:main',
+            'teleop_pipeline = key_teleop.teleop_pipeline:main'
         ],
     },
 )

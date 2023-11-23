@@ -44,42 +44,16 @@ import curses
 import os
 import signal
 import time
+import math
+import numpy as np 
 
-from geometry_msgs.msg import Twist, TwistStamped
+
 import rclpy
 from rclpy.duration import Duration
 from rclpy.node import Node
+from std_msgs.msg import Int32
 from rclpy.qos import qos_profile_system_default
 from std_msgs.msg import Header
-
-
-class Velocity(object):
-
-    def __init__(self, min_velocity, max_velocity, num_steps):
-        assert min_velocity > 0 and max_velocity > 0 and num_steps > 0
-        self._min = min_velocity
-        self._max = max_velocity
-        self._num_steps = num_steps
-        if self._num_steps > 1:
-            self._step_incr = (max_velocity - min_velocity) / (self._num_steps - 1)
-        else:
-            # If num_steps is one, we always use the minimum velocity.
-            self._step_incr = 0
-
-    def __call__(self, value, step):
-        """
-        Form a velocity.
-
-        Take a value in the range [0, 1] and the step and returns the
-        velocity (usually m/s or rad/s).
-        """
-        if step == 0:
-            return 0
-
-        assert step > 0 and step <= self._num_steps
-        max_value = self._min + self._step_incr * (step - 1)
-        return value * max_value
-
 
 class TextWindow():
 
@@ -120,36 +94,17 @@ class TextWindow():
         curses.flash()
 
 
-class SimpleKeyTeleop(Node):
+class KeyboardHandler(Node):
 
     def __init__(self, interface):
         super().__init__('key_teleop')
 
         self._interface = interface
 
-        self._publish_stamped_twist = self.declare_parameter('twist_stamped_enabled', False).value
-
-        if self._publish_stamped_twist:
-            self._pub_cmd = self.create_publisher(TwistStamped, 'key_vel',
-                                                  qos_profile_system_default)
-        else:
-            self._pub_cmd = self.create_publisher(Twist, 'key_vel', qos_profile_system_default)
+        self.publisher_ = self.create_publisher(Int32, 'keyboard_key', 10)
 
         self._hz = self.declare_parameter('hz', 10).value
-
-        self._forward_rate = self.declare_parameter('forward_rate', 0.8).value
-        self._backward_rate = self.declare_parameter('backward_rate', 0.5).value
-        self._rotation_rate = self.declare_parameter('rotation_rate', 1.0).value
         self._last_pressed = {}
-        self._angular = 0
-        self._linear = 0
-
-    movement_bindings = {
-        curses.KEY_UP:    (1,  0),
-        curses.KEY_DOWN:  (-1,  0),
-        curses.KEY_LEFT:  (0,  1),
-        curses.KEY_RIGHT: (0, -1),
-    }
 
     def run(self):
         self._running = True
@@ -159,74 +114,46 @@ class SimpleKeyTeleop(Node):
                 if keycode is None:
                     break
                 self._key_pressed(keycode)
-            self._set_velocity()
             self._publish()
             # TODO(artivis) use Rate once available
             time.sleep(1.0/self._hz)
-
-    def _make_twist(self, linear, angular):
-        twist = Twist()
-        twist.linear.x = linear
-        twist.angular.z = angular
-        return twist
-
-    def _make_twist_stamped(self, linear, angular):
-        twist_stamped = TwistStamped()
-        header = Header()
-        header.stamp = rclpy.clock.Clock().now().to_msg()
-        header.frame_id = 'key_teleop'
-
-        twist_stamped.header = header
-        twist_stamped.twist.linear.x = linear
-        twist_stamped.twist.angular.z = angular
-        return twist_stamped
-
-    def _set_velocity(self):
-        now = self.get_clock().now()
-        keys = []
-        for a in self._last_pressed:
-            if now - self._last_pressed[a] < Duration(seconds=0.4):
-                keys.append(a)
-        linear = 0.0
-        angular = 0.0
-        for k in keys:
-            l, a = self.movement_bindings[k]
-            linear += l
-            angular += a
-        if linear > 0:
-            linear = linear * self._forward_rate
-        else:
-            linear = linear * self._backward_rate
-        angular = angular * self._rotation_rate
-        self._angular = angular
-        self._linear = linear
 
     def _key_pressed(self, keycode):
         if keycode == ord('q'):
             self._running = False
             # TODO(artivis) no rclpy.signal_shutdown ?
             os.kill(os.getpid(), signal.SIGINT)
-        elif keycode in self.movement_bindings:
+        else:
             self._last_pressed[keycode] = self.get_clock().now()
 
     def _publish(self):
-        self._interface.clear()
-        self._interface.write_line(2, 'Linear: %f, Angular: %f' % (self._linear, self._angular))
-        self._interface.write_line(5, 'Use arrow keys to move, q to exit.')
-        self._interface.refresh()
-
-        if self._publish_stamped_twist:
-            twist = self._make_twist_stamped(self._linear, self._angular)
+        now = self.get_clock().now()
+        keys = []
+        for a in self._last_pressed:
+            if now - self._last_pressed[a] < Duration(seconds=0.6):
+                keys.append(a)
+        if not keys:
+            self._interface.clear()
+            self._interface.write_line(2, 'Keycode: None')
+            self._interface.write_line(5, 'Use arrow keys to move, q to exit.')
+            self._interface.refresh()
+            msg = Int32()
+            msg.data = 0
+            self.publisher_.publish(msg)
         else:
-            twist = self._make_twist(self._linear, self._angular)
-
-        self._pub_cmd.publish(twist)
-
+            for keycode in keys:
+                self._interface.clear()
+                self._interface.write_line(2, 'Keycode: %d' % keycode)
+                self._interface.write_line(5, 'Use arrow keys to move, q to exit.')
+                self._interface.refresh()
+                msg = Int32()
+                msg.data = keycode
+                self.publisher_.publish(msg)
 
 def execute(stdscr):
     rclpy.init()
 
-    app = SimpleKeyTeleop(TextWindow(stdscr))
+    app = KeyboardHandler(TextWindow(stdscr))
     app.run()
 
     app.destroy_node()
