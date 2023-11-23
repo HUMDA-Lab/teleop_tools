@@ -11,7 +11,7 @@
   <author email="siegfried.gevatter@pal-robotics.com">Siegfried-A. Gevatter Pujals</author>
 
   <exec_depend>geometry_msgs</exec_depend>
-  <exec_depend>humda_common</exec_depend>
+  <exec_depend>autonoma_msgs</exec_depend>
   <exec_depend>rclpy</exec_depend>
 
   <test_depend>ament_copyright</test_depend>

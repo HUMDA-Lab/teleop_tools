@@ -103,7 +103,7 @@ class KeyboardHandler(Node):
 
         self.publisher_ = self.create_publisher(Int32, 'keyboard_key', 10)
 
-        self._hz = self.declare_parameter('hz', 10).value
+        self._hz = self.declare_parameter('hz', 20).value
         self._last_pressed = {}
 
     def run(self):
