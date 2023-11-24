@@ -13,7 +13,7 @@ class KeyboardTeleop(Node):
             10)
         self.control_publisher = self.create_publisher(
             ControlSignal,
-            'teleop',
+            'teleop_output',
             10
         )
         self.throttle_ = 0.0
@@ -48,13 +48,13 @@ class KeyboardTeleop(Node):
         control_msg = ControlSignal()
 
         if self.throttle_ > 0:
-            control_msg.pedal_postion = self.throttle_
+            control_msg.pedal_position = self.throttle_
         elif self.brake_ >0:
-            control_msg.pedal_postion = self.brake_
+            control_msg.pedal_position = self.brake_
         else:
-            control_msg.pedal_postion = 0.0
+            control_msg.pedal_position = 0.0
         
-        control_msg.steering_angle = self.steering_
+        control_msg.steering_angle = float(self.steering_)
 
         self.control_publisher.publish(control_msg)
 
