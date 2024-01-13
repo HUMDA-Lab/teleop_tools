@@ -48,9 +48,9 @@ class KeyboardTeleop(Node):
         control_msg = ControlSignal()
 
         if self.throttle_ > 0:
-            control_msg.pedal_position = self.throttle_
+            control_msg.pedal_position = float(self.throttle_)
         elif self.brake_ >0:
-            control_msg.pedal_position = self.brake_
+            control_msg.pedal_position = -1.0 * float(self.brake_)
         else:
             control_msg.pedal_position = 0.0
         
