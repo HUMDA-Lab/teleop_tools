@@ -22,15 +22,15 @@ class KeyboardTeleop(Node):
         self.deltatime_ = 0.025
 
     def keypress_callback(self, msg):
-        throttle_input = 1 if msg.data == 259 else 0
-        brake_input = 1 if msg.data == 258 else 0
+        throttle_input = 1.0 if msg.data == 259 else 0.0
+        brake_input = 1.0 if msg.data == 258 else 0.0
         steering_input = 0.0
         if msg.data == 260:
-            steering_input = 1
+            steering_input = 1.0
         elif msg.data == 261:
-            steering_input = -1
+            steering_input = -1.0
         else:
-            steering_input = 0
+            steering_input = 0.0
         if (throttle_input > self.throttle_):
             self.throttle_ = self.rateLimitUpdate(throttle_input,self.throttle_,1.5)
         else:
