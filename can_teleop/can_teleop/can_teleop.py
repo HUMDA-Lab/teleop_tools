@@ -1,8 +1,8 @@
 import can
 import cantools
 import threading
-import roslibpy as rospy
 import os
+import numpy as np
 
 import rclpy
 from rclpy.node import Node
@@ -43,23 +43,23 @@ class CANDriverSender(Node):
         super().__init__('joy_can')
         self.manager = manager
         self.alive = 0
-        self.brake_scale = -50
+        self.brake_scale = 50
         self.brake_offset = 50
         self.brake_bias = 0.6
-        self.throttle_scale = -50
+        self.throttle_scale = 50
         self.throttle_offset = 50
         self.gear = 1
-        self.steering_scale = 100
+        self.steering_scale = 263
         self.steering_offset = 0
         
         self.steering_axis = 0
-        self.throttle_axis = 5
-        self.brake_axis = 2
+        self.throttle_axis = 2
+        self.brake_axis = 3
         
         self.shift_up_btn_state = ButtonState.RELEASED
         self.shift_down_btn_state = ButtonState.RELEASED
-        self.shift_up_btn = 0
-        self.shift_down_btn = 3
+        self.shift_up_btn = 4
+        self.shift_down_btn = 5
         
         self.shift_up_press_time = self.get_clock().now()
         self.shift_down_press_time = self.get_clock().now()
@@ -73,9 +73,15 @@ class CANDriverSender(Node):
         hl01_msg = db.get_message_by_frame_id(257)
         hl02_msg = db.get_message_by_frame_id(258)
         
-        brake_pressure_front = ros_msg.axes[2] * self.brake_scale + self.brake_offset
+        brake_pressure_front = ros_msg.axes[self.brake_axis] * self.brake_scale + self.brake_offset
+        np.clip(brake_pressure_front, 0, 100)
         brake_pressure_rear = brake_pressure_front * (1 - self.brake_bias) / self.brake_bias
+        np.clip(brake_pressure_rear, 0, 100)
         steering = ros_msg.axes[self.steering_axis] * self.steering_scale + self.steering_offset
+        if steering >= 100.0:
+            steering = 100.0
+        elif steering <= -100:
+            steering = -100
         throttle = ros_msg.axes[self.throttle_axis] * self.throttle_scale + self.throttle_offset
         
         self.gear = self.gear_box(ros_msg.buttons[self.shift_up_btn], ros_msg.buttons[self.shift_down_btn])
@@ -83,7 +89,7 @@ class CANDriverSender(Node):
         # Fill the signals from ros message
         hl_01_signals = {
             "HL_TargetThrottle": throttle,
-            "HL_TargetGear": self.gear-1,
+            "HL_TargetGear": self.gear,
             "HL_TargetPressure_RR": brake_pressure_rear,
             "HL_TargetPressure_RL": brake_pressure_rear,
             "HL_TargetPressure_FR": brake_pressure_front,
@@ -135,7 +141,7 @@ class CANDriverSender(Node):
             self.shift_down_press_time = self.get_clock().now()
         elif shift_down == 0 and self.shift_down_btn_state == ButtonState.PRESSED:
             self.shift_down_btn_state = ButtonState.RELEASED
-            time_diff = (self.get_clock().now() - self.shift_up_press_time).nanoseconds / 1e9
+            time_diff = (self.get_clock().now() - self.shift_down_press_time).nanoseconds / 1e9
             if time_diff > 0.05:
                 target_gear = max(self.gear - 1, 1)
         return target_gear
