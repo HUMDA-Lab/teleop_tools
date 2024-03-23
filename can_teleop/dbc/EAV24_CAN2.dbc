@@ -1,0 +1,303 @@
+VERSION ""
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_: BSU HL
+
+
+BO_ 1459 SW_Versions_03: 8 BSU
+ SG_ CBA_RR_SW_minorVersion : 31|7@0+ (1,0) [0|127] "uint"  HL
+ SG_ CBA_RR_SW_MajorVersion : 24|5@0+ (1,0) [0|31] "uint"  HL
+ SG_ CBA_RR_SW_buildVersion : 35|10@0+ (1,0) [0|1023] "uint"  HL
+ SG_ CBA_RL_SW_minorVersion : 7|7@0+ (1,0) [0|127] "uint"  HL
+ SG_ CBA_RL_SW_MajorVersion : 0|5@0+ (1,0) [0|31] "uint"  HL
+ SG_ CBA_RL_SW_buildVersion : 11|10@0+ (1,0) [0|1023] "uint"  HL
+
+BO_ 339 RC_Status_01: 8 BSU
+ SG_ RC_TrackFlag : 23|16@0+ (1,0) [0|0] ""  HL
+ SG_ RC_SessionType : 7|8@0+ (1,0) [0|0] ""  HL
+ SG_ RC_CarFlag : 15|8@0+ (1,0) [0|0] ""  HL
+
+BO_ 338 DiagnosticWord_02: 4 BSU
+ SG_ RC_Beacon_TimeOut : 6|1@0+ (1,0) [0|1] "bool" Vector__XXX
+ SG_ RC_ForceRaceMode : 7|1@0+ (1,0) [0|1] "bool"  HL
+
+BO_ 337 EM_Status_01: 8 BSU
+ SG_ HLStop_TimeToDec_2 : 49|10@0+ (0.1,0) [0|102.3] "s" Vector__XXX
+ SG_ HLStop_TimeToDec_1 : 43|10@0+ (0.1,0) [0|102.3] "s" Vector__XXX
+ SG_ HLStop_Deceleration_2 : 37|10@0+ (0.1,0) [0|102.3] "m/s" Vector__XXX
+ SG_ HLStop_Deceleration_1 : 31|10@0+ (0.1,0) [0|102.3] "m/s" Vector__XXX
+ SG_ EMB_Tank_Pressure_bar : 0|7@0+ (0.1,0) [0|12] "bar"  HL
+ SG_ EMB_Line_Pressure_bar : 7|7@0+ (0.1,0) [0|12] "bar"  HL
+ SG_ EM_Status : 9|10@0+ (1,0) [0|1023] "uint"  HL
+
+BO_ 550 ICE_Status_02: 8 BSU
+ SG_ ICE_OilPress_kPa : 55|14@0+ (0.1,0) [0|1638.3] "kPa"  HL
+ SG_ ICE_WaterTemp_degC : 47|8@0+ (1,-40) [-40|255] "degC"  HL
+ SG_ ICE_OilTemp_degC : 7|8@0+ (1,-40) [-40|255] "degC"  HL
+ SG_ ICE_FuelPress_kPa : 31|16@0+ (0.02,0) [0|1000] "kPa"  HL
+ SG_ ICE_EngineSpeed_rpm : 15|16@0+ (0.4,0) [0|16000] "rpm"  HL
+
+BO_ 549 ICE_Status_01: 8 BSU
+ SG_ ICE_Downshift_Available : 57|1@0+ (1,0) [0|1] "enum" Vector__XXX
+ SG_ ICE_PushToPass_Req : 27|1@0+ (1,0) [0|1] "enum"  HL
+ SG_ ICE_AvailableFuel_l : 41|16@0+ (0.01,0) [0|655.35] "l"  HL
+ SG_ ICE_WaterPress_kPa : 25|16@0+ (0.1,-32) [-32|3276] "kPa"  HL
+ SG_ ICE_PushToPass_ACK : 26|1@0+ (1,0) [0|1] "enum"  HL
+ SG_ ICE_TargetThrottle_ACK : 21|10@0+ (0.1,0) [0|100] "%"  HL
+ SG_ ICE_TargetGear_ACK : 3|4@0+ (1,-1) [-1|8] "enum"  HL
+ SG_ ICE_ActualThrottle : 15|10@0+ (0.1,0) [0|100] "%"  HL
+ SG_ ICE_ActualGear : 7|4@0+ (1,-1) [-1|8] "enum"  HL
+
+BO_ 336 DiagnosticWord_01: 8 BSU
+ SG_ ICE_GearLowOilTemp_Warning : 17|1@0+ (1,0) [0|1] "bool" Vector__XXX
+ SG_ ICE_DiagnosticSpare : 56|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ RM_TimeoutError : 57|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ RM_CounterError : 58|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ ICE_FuelVolume_Warning : 59|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ ICE_TargetGearNotReached_Warning : 60|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ ICE_SensorFailure_Warning : 61|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ ICE_OverRPM_Warning : 62|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ ICE_OilTemperature_Warning : 63|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ ICE_OilPressure_Warning : 48|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ ICE_GearOilTemperature_Warning : 49|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ ICE_FuelPressure_Warning : 50|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ ICE_CoolantTemperature_Warning : 51|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ ICE_CoolantPressure_Warning : 52|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ ICE_Boost_Warning : 53|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ BSU_WrongInitConfig : 54|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ ICEOverride_WrongConfig : 55|1@0+ (1,0) [0|1] ""  HL
+ SG_ EMB_TankPress_UnderMinStartLimit : 40|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ EMB_TankPress_UnderLevel3 : 41|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ EMB_TankPress_UnderLevel2 : 42|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ EMB_TankPress_UnderLevel1 : 43|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ PSA_TimeoutError : 44|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ PSA_Error : 45|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ PSA_Derating : 46|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ PSA_CounterError : 47|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ EM_PistonHall_NotReady : 32|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ PDU2_TimeoutError : 33|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ PDU2_CounterError : 34|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ PDU1_TimeoutError : 35|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ PDU1_CounterError : 36|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ ICE_OilTemp_UnderMinStartLimit : 37|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ EMB_LinePress_OverMaxStartLimit : 38|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ ICE_TimeoutError : 39|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ ICE_CounterError : 24|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ HL_TimeoutError : 25|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ HL_CounterError : 26|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ ICE_APS_Warning : 27|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ ICE_Starting_StartingFailed : 28|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ ICE_Starting_OilHeaterFailed : 29|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ ICE_Starting_FuelingFailed : 30|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ ICE_EngineOffRejected : 16|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ ICE_Error : 19|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ DCDC_TimeoutError : 20|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ DCDC_StartingFaild : 21|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ CBA_RR_TimeoutError : 22|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ CBA_RR_Error : 23|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ CBA_RR_Derating : 8|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ CBA_RR_CounterError : 9|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ CBA_RL_TimeoutError : 10|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ CBA_RL_Error : 11|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ CBA_RL_Derating : 12|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ CBA_RL_CounterError : 13|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ CBA_FR_TimeoutError : 14|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ CBA_FR_Error : 15|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ CBA_FR_Derating : 0|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ CBA_FR_CounterError : 1|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ CBA_FL_TimeoutError : 2|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ CBA_FL_Error : 3|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ CBA_FL_Derating : 4|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ CBA_FL_CounterError : 5|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ BMS_TimeoutError : 6|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ BMS_StartingFaild : 7|1@0+ (1,0) [0|1] "bool"  HL
+
+BO_ 274 HL_Trajectory_02: 8 HL
+ SG_ Trajectory_Curvature_10 : 43|11@0+ (0.0001,-0.1) [-0.1|0.1] "1/m"  BSU
+ SG_ Trajectory_Curvature_09 : 38|11@0+ (0.0001,-0.1) [-0.1|0.1] "1/m"  BSU
+ SG_ Trajectory_Curvature_08 : 17|11@0+ (0.0001,-0.1) [-0.1|0.1] "1/m"  BSU
+ SG_ Trajectory_Curvature_07 : 12|11@0+ (0.0001,-0.1) [-0.1|0.1] "1/m"  BSU
+ SG_ Trajectory_Curvature_06 : 7|11@0+ (0.0001,-0.1) [-0.1|0.1] "1/m"  BSU
+
+BO_ 273 HL_Trajectory_01: 8 HL
+ SG_ Trajectory_Lateral_OffSet : 63|8@0+ (0.25,-31.5) [-31.5|31.5] "m"  BSU
+ SG_ Trajectory_Curvature_05 : 43|11@0+ (0.0001,-0.1) [-0.1|0.1] "1/m"  BSU
+ SG_ Trajectory_Curvature_04 : 38|11@0+ (0.0001,-0.1) [-0.1|0.1] "1/m"  BSU
+ SG_ Trajectory_Curvature_03 : 17|11@0+ (0.0001,-0.1) [-0.1|0.1] "1/m"  BSU
+ SG_ Trajectory_Curvature_02 : 12|11@0+ (0.0001,-0.1) [-0.1|0.1] "1/m"  BSU
+ SG_ Trajectory_Curvature_01 : 7|11@0+ (0.0001,-0.1) [-0.1|0.1] "1/m"  BSU
+
+BO_ 513 BSU_Status_01: 8 BSU
+ SG_ ABS_ExternalEnable_Ack : 39|1@0+ (1,0) [0|1] ""  HL
+ SG_ BSU_ML_Stop_Activated : 0|1@0+ (1,0) [0|1] "enum"  HL
+ SG_ BSU_EM_Stop_Activated : 1|1@0+ (1,0) [0|1] "enum"  HL
+ SG_ BSU_AliveCounter : 15|4@0+ (1,0) [0|15] "uint"  HL
+ SG_ BSU_HL_Warning : 2|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ BSU_HL_StopRequest : 3|1@0+ (1,0) [0|1] "bool"  HL
+ SG_ BSU_Status : 23|10@0+ (1,0) [0|1023] "uint"  HL
+
+BO_ 561 PDUs_Status_01: 8 BSU
+ SG_ PDU2_Total_Current_A : 35|12@0+ (0.1,0) [0|409] "A"  HL
+ SG_ PDU2_Power_Supply_Voltage_V : 31|8@0+ (0.1,0) [0|25] "V"  HL
+ SG_ PDU1_Total_Current_A : 11|12@0+ (0.1,0) [0|409] "A"  HL
+ SG_ PDU1_Power_Supply_Voltage_V : 7|8@0+ (0.1,0) [0|25] "V"  HL
+
+BO_ 530 PSA_Status_02: 8 BSU
+ SG_ PSA_ActualTorque : 35|12@0+ (0.05,-100) [-100|100] "%"  HL
+ SG_ PSA_ActualSpeed : 31|12@0+ (0.05,-100) [-100|100] "%"  HL
+ SG_ PSA_ActualPos : 11|12@0+ (0.05,-100) [-100|100] "%"  HL
+ SG_ PSA_TargetPSAControl_ACK : 7|12@0+ (0.05,-100) [-100|100] "%"  HL
+
+BO_ 1457 SW_Versions_01: 8 BSU
+ SG_ PSA_SW_buildVersion : 35|10@0+ (1,0) [0|1023] "uint"  HL
+ SG_ BSU_SW_buildVersion : 11|10@0+ (1,0) [0|1023] "uint"  HL
+ SG_ PSA_SW_minorVersion : 31|7@0+ (1,0) [0|127] "uint"  HL
+ SG_ PSA_SW_MajorVersion : 24|5@0+ (1,0) [0|31] "uint"  HL
+ SG_ PDU1_SW_Version : 55|8@0+ (1,0) [0|255] "uint"  HL
+ SG_ PDU2_SW_Version : 63|8@0+ (1,0) [0|255] "uint"  HL
+ SG_ BSU_SW_minorVersion : 7|7@0+ (1,0) [0|127] "uint"  HL
+ SG_ BSU_SW_MajorVersion : 0|5@0+ (1,0) [0|31] "uint"  HL
+
+BO_ 1458 SW_Versions_02: 8 BSU
+ SG_ CBA_FR_SW_buildVersion : 35|10@0+ (1,0) [0|1023] "uint"  HL
+ SG_ CBA_FL_SW_buildVersion : 11|10@0+ (1,0) [0|1023] "uint"  HL
+ SG_ CBA_FL_SW_minorVersion : 7|7@0+ (1,0) [0|127] "uint"  HL
+ SG_ CBA_FL_SW_MajorVersion : 0|5@0+ (1,0) [0|31] "uint"  HL
+ SG_ CBA_FR_SW_minorVersion : 31|7@0+ (1,0) [0|127] "uint"  HL
+ SG_ CBA_FR_SW_MajorVersion : 24|5@0+ (1,0) [0|31] "uint"  HL
+
+BO_ 529 PSA_Status_01: 8 BSU
+ SG_ PSA_ActualVoltage_V : 50|8@0+ (0.4,0) [0|64] "V"  HL
+ SG_ PSA_ActualCurrent_A : 44|10@0+ (0.1,-50) [-50|50] "A"  HL
+ SG_ PSA_ActualModeOfOperation : 47|3@0+ (1,0) [0|7] "enum"  HL
+ SG_ PSA_ActualTorque_mNm : 28|13@0+ (10,-32000) [-32000|32000] "mNm"  HL
+ SG_ PSA_ActualSpeed_rad_s : 9|13@0+ (0.1,-255) [-255|255] "rad_s"  HL
+ SG_ PSA_ActualPos_rad : 7|14@0+ (0.005,-25.5) [-25.5|25.5] "rad"  HL
+
+BO_ 548 CBA_Status_RR: 8 BSU
+ SG_ CBA_ActualPressure_RR : 11|11@0+ (0.05,0) [0|100] "%"  HL
+ SG_ CBA_Voltage_RR_V : 63|8@0+ (0.4,0) [0|102] "V"  HL
+ SG_ CBA_Target_Pressure_RR_ACK : 26|11@0+ (0.05,0) [0|100] "%"  HL
+ SG_ CBA_ActualPressure_RR_Pa : 7|12@0+ (10000,0) [0|40950000] "Pa"  HL
+ SG_ CBA_ActualCurrent_RR_A : 41|10@0+ (0.1,-50) [-50|50] "A"  HL
+
+BO_ 547 CBA_Status_RL: 8 BSU
+ SG_ CBA_ActualPressure_RL : 11|11@0+ (0.05,0) [0|100] "%"  HL
+ SG_ CBA_Voltage_RL_V : 63|8@0+ (0.4,0) [0|102] "V"  HL
+ SG_ CBA_Target_Pressure_RL_ACK : 26|11@0+ (0.05,0) [0|100] "%"  HL
+ SG_ CBA_ActualPressure_RL_Pa : 7|12@0+ (10000,0) [0|40950000] "Pa"  HL
+ SG_ CBA_ActualCurrent_RL_A : 41|10@0+ (0.1,-50) [-50|50] "A"  HL
+
+BO_ 546 CBA_Status_FR: 8 BSU
+ SG_ CBA_ActualPressure_FR : 11|11@0+ (0.05,0) [0|100] "%"  HL
+ SG_ CBA_Voltage_FR_V : 63|8@0+ (0.4,0) [0|102] "V"  HL
+ SG_ CBA_Target_Pressure_FR_ACK : 31|11@0+ (0.05,0) [0|100] "%"  HL
+ SG_ CBA_ActualPressure_FR_Pa : 7|12@0+ (10000,0) [0|40950000] "Pa"  HL
+ SG_ CBA_ActualCurrent_FR_A : 41|10@0+ (0.1,-50) [-50|50] "A"  HL
+
+BO_ 545 CBA_Status_FL: 8 BSU
+ SG_ CBA_ActualPressure_FL : 11|11@0+ (0.05,0) [0|100] "%"  HL
+ SG_ CBA_Voltage_FL_V : 63|8@0+ (0.4,0) [0|102] "V"  HL
+ SG_ CBA_Target_Pressure_FL_ACK : 31|11@0+ (0.05,0) [0|100] "%"  HL
+ SG_ CBA_ActualPressure_FL_Pa : 7|12@0+ (10000,0) [0|40950000] "Pa"  HL
+ SG_ CBA_ActualCurrent_FL_A : 47|10@0+ (0.1,-50) [-50|50] "A"  HL
+
+BO_ 321 Wheels_Speed_01: 8 BSU
+ SG_ WSS_Speed_RR_rad_s : 53|14@0+ (0.025,0) [0|409.5] "rad_s"  HL
+ SG_ WSS_Speed_RL_rad_s : 37|14@0+ (0.025,0) [0|409.5] "rad_s"  HL
+ SG_ WSS_Speed_FR_rad_s : 21|14@0+ (0.025,0) [0|409.5] "rad_s"  HL
+ SG_ WSS_Speed_FL_rad_s : 5|14@0+ (0.025,0) [0|409.5] "rad_s"  HL
+
+BO_ 259 HL_Msg_03: 5 HL
+ SG_ HL_Crancking_ByPass : 39|1@0+ (1,0) [0|1] "" Vector__XXX
+ SG_ HL_PushToPass_ON : 2|1@0+ (1,0) [0|1] "enum" Vector__XXX
+ SG_ ICE_Start_FuelLevel_l : 23|16@0+ (0.01,0) [0|655.35] "l"  BSU
+ SG_ HL_DBW_Enable : 3|1@0+ (1,0) [0|1] ""  BSU
+ SG_ HL_Alive_03 : 7|4@0+ (1,0) [0|15] "uint"  BSU
+ SG_ HL_PDU1_Activate_RADAR_rear : 11|1@0+ (1,0) [0|1] "bool"  BSU
+ SG_ HL_PDU1_Activate_RADAR_cn : 10|1@0+ (1,0) [0|1] "bool"  BSU
+ SG_ HL_PDU1_Activate_RADAR_R : 9|1@0+ (1,0) [0|1] "bool"  BSU
+ SG_ HL_PDU1_Activate_RADAR_L : 8|1@0+ (1,0) [0|1] "bool"  BSU
+ SG_ HL_PDU1_Activate_OSS : 0|1@0+ (1,0) [0|1] "bool"  BSU
+ SG_ HL_PDU1_Activate_Lidar_R : 14|1@0+ (1,0) [0|1] "bool"  BSU
+ SG_ HL_PDU1_Activate_Lidar_cn : 13|1@0+ (1,0) [0|1] "bool"  BSU
+ SG_ HL_PDU1_Activate_Lidar_L : 12|1@0+ (1,0) [0|1] "bool"  BSU
+ SG_ HL_PDU1_Activate_GNSS : 1|1@0+ (1,0) [0|1] "bool"  BSU
+ SG_ HL_ICE_Enable : 15|1@0+ (1,0) [0|1] "bool"  BSU
+
+BO_ 1442 BSU_Ranges_02: 8 BSU
+ SG_ PSA_MinTorque_mNm : 34|11@0+ (10,-19760) [-19760|0] "mNm"  HL
+ SG_ PSA_MinAngleSpeed_rad_s : 23|8@0+ (1,-255) [-255|0] "rad_s"  HL
+ SG_ PSA_MinAngle_rad : 7|8@0+ (0.1,-25.5) [-25.5|0] "rad"  HL
+ SG_ PSA_MaxTorque_mNm : 50|11@0+ (10,0) [0|19760] "mNm"  HL
+ SG_ PSA_MaxAngleSpeed_rad_s : 31|8@0+ (1,0) [0|255] "rad_s"  HL
+ SG_ PSA_MaxAngle_rad : 15|8@0+ (0.1,0) [0|25.5] "rad"  HL
+
+BO_ 1441 BSU_Ranges_01: 8 BSU
+ SG_ ICE_MinThrottle : 46|7@0+ (1,0) [0|100] "%"  HL
+ SG_ ICE_MaxThrottle : 38|7@0+ (1,0) [0|100] "%"  HL
+ SG_ CBA_MinPressure_RR_Pa : 31|1@0+ (100000,0) [0|100000] "Pa"  HL
+ SG_ CBA_MinPressure_RL_Pa : 23|1@0+ (100000,0) [0|100000] "Pa"  HL
+ SG_ CBA_MinPressure_FR_Pa : 15|1@0+ (100000,0) [0|100000] "Pa"  HL
+ SG_ CBA_MinPressure_FL_Pa : 7|1@0+ (100000,0) [0|100000] "Pa"  HL
+ SG_ CBA_MaxPressure_RR_Pa : 28|5@0+ (500000,5000000) [5000000|20000000] "Pa"  HL
+ SG_ CBA_MaxPressure_RL_Pa : 20|5@0+ (500000,5000000) [5000000|20000000] "Pa"  HL
+ SG_ CBA_MaxPressure_FR_Pa : 12|5@0+ (500000,5000000) [5000000|20000000] "Pa"  HL
+ SG_ CBA_MaxPressure_FL_Pa : 4|5@0+ (500000,5000000) [5000000|20000000] "Pa"  HL
+
+BO_ 258 HL_Msg_02: 8 HL
+ SG_ HL_Alive_02 : 7|4@0+ (1,0) [0|15] "uint"  BSU
+ SG_ HL_PSA_Profile_Vel_rad_s : 54|15@0+ (0.1,0) [0|2000] "rad_s"  BSU
+ SG_ HL_PSA_Profile_Dec_rad_s2 : 37|15@0+ (0.1,0) [0|2000] "rad/s2"  BSU
+ SG_ HL_PSA_Profile_Acc_rad_s2 : 20|15@0+ (0.1,0) [0|2000] "rad/s2"  BSU
+ SG_ HL_TargetPSAControl : 0|12@0+ (0.05,-100) [-100|100] "%"  BSU
+ SG_ HL_PSA_ModeOfOperation : 3|3@0+ (1,0) [0|7] "enum"  BSU
+
+BO_ 257 HL_Msg_01: 8 HL
+ SG_ HL_TargetThrottle : 51|10@0+ (0.1,0) [0|100] "%"  BSU
+ SG_ HL_TargetGear : 55|4@0+ (1,-1) [-1|8] "enum"  BSU
+ SG_ HL_TargetPressure_RR : 3|11@0+ (0.05,0) [0|100] "%"  BSU
+ SG_ HL_TargetPressure_RL : 8|11@0+ (0.05,0) [0|100] "%"  BSU
+ SG_ HL_TargetPressure_FR : 29|11@0+ (0.05,0) [0|100] "%"  BSU
+ SG_ HL_TargetPressure_FL : 34|11@0+ (0.05,0) [0|100] "%"  BSU
+ SG_ HL_Alive_01 : 7|4@0+ (1,0) [0|15] "uint"  BSU
+
+
+
+CM_ SG_ 258 HL_PSA_Profile_Vel_rad_s "If This Signal is set to 0, Default value will be send by the BSU";
+CM_ SG_ 258 HL_PSA_Profile_Dec_rad_s2 "If This Signal is set to 0, Default value will be send by the BSU";
+CM_ SG_ 258 HL_PSA_Profile_Acc_rad_s2 "If This Signal is set to 0, Default value will be send by the BSU";
+BA_DEF_  "BusType" STRING ;
+BA_DEF_DEF_  "BusType" "CAN";
