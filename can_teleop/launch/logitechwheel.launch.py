@@ -12,6 +12,9 @@ def generate_launch_description():
             package='joy',
             executable='joy_node',
             output='screen',
+            parameters=[{
+                'deadzone': 0.0
+            }],
         ),
         Node(
             package='can_teleop',
