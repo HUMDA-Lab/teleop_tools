@@ -91,10 +91,10 @@ class CANDriverSender(Node):
 
         hl_01_msg:HL_Msg_01 = HL_Msg_01()
 
-        hl_01_msg.hl_targetpressure_rr = brake_pressure_rear;
-        hl_01_msg.hl_targetpressure_rl = brake_pressure_rear;
-        hl_01_msg.hl_targetpressure_fr = brake_pressure_front;
-        hl_01_msg.hl_targetpressure_fl = brake_pressure_front;
+        hl_01_msg.hl_target_pressure_rr = brake_pressure_rear
+        hl_01_msg.hl_target_pressure_rl = brake_pressure_rear
+        hl_01_msg.hl_target_pressure_fr = brake_pressure_front
+        hl_01_msg.hl_target_pressure_fl = brake_pressure_front
         hl_01_msg.hl_target_throttle = throttle;
         hl_01_msg.hl_target_gear = self.gear;
         hl01_msg.hl_alive_01 = (self.alive + 1) % 16
@@ -104,9 +104,9 @@ class CANDriverSender(Node):
         hl_02_msg.hl_alive_02 = (self.alive + 1) % 16
         hl_02_msg.hl_target_psa_control = steering
         hl_02_msg.hl_psa_mode_of_operation = 1
-        hl_02_msg.hl_psa_profile_acc_rad_s2 = 1000
-        hl_02_msg.hl_psa_profile_dec_rad_s2 = 1000
-        hl_02_msg.hl_psa_profile_vel_rad_s = 1000
+        hl_02_msg.hl_psa_profile_acc_rad_s2 = 1000.0
+        hl_02_msg.hl_psa_profile_dec_rad_s2 = 1000.0
+        hl_02_msg.hl_psa_profile_vel_rad_s = 1000.0
 
         self.hl_01_pub.publish(hl_01_msg)
         self.hl_02_pub.publish(hl_02_msg)
