@@ -66,6 +66,9 @@ class CANDriverSender(Node):
         
         self.create_subscription(Joy, 'joy', self.joy_callback, 10)
 
+        self.hl_01_pub = self.create_publisher(HL_Msg_01, 'a2rl/eav24_bsu/hl_msg_01',10)
+        self.hl_02_pub = self.create_publisher(HL_Msg_02, 'a2rl/eav24_bsu/hl_msg_02',10)
+
     # Create the needed ros messages subs
     
     def joy_callback(self, ros_msg:Joy):
@@ -85,6 +88,28 @@ class CANDriverSender(Node):
         throttle = ros_msg.axes[self.throttle_axis] * self.throttle_scale + self.throttle_offset
         
         self.gear = self.gear_box(ros_msg.buttons[self.shift_up_btn], ros_msg.buttons[self.shift_down_btn])
+
+        hl_01_msg:HL_Msg_01 = HL_Msg_01()
+
+        hl_01_msg.hl_targetpressure_rr = brake_pressure_rear;
+        hl_01_msg.hl_targetpressure_rl = brake_pressure_rear;
+        hl_01_msg.hl_targetpressure_fr = brake_pressure_front;
+        hl_01_msg.hl_targetpressure_fl = brake_pressure_front;
+        hl_01_msg.hl_target_throttle = throttle;
+        hl_01_msg.hl_target_gear = self.gear;
+        hl01_msg.hl_alive_01 = (self.alive + 1) % 16
+
+        hl_02_msg:HL_Msg_02 = HL_Msg_02()
+
+        hl_02_msg.hl_alive_02 = (self.alive + 1) % 16
+        hl_02_msg.hl_target_psa_control = steering
+        hl_02_msg.hl_psa_mode_of_operation = 1
+        hl_02_msg.hl_psa_profile_acc_rad_s2 = 1000
+        hl_02_msg.hl_psa_profile_dec_rad_s2 = 1000
+        hl_02_msg.hl_psa_profile_vel_rad_s = 1000
+
+        self.hl_01_pub.publish(hl_01_msg)
+        self.hl_02_pub.publish(hl_02_msg)
 
         # Fill the signals from ros message
         hl_01_signals = {
@@ -109,10 +134,10 @@ class CANDriverSender(Node):
         data = hl01_msg.encode(hl_01_signals)
         
         # Send to the can bus
-        self.send_to_can(hl01_msg.frame_id, data)
+        # self.send_to_can(hl01_msg.frame_id, data)
         
         data = hl02_msg.encode(hl_02_signals)
-        self.send_to_can(hl02_msg.frame_id, data)
+        # self.send_to_can(hl02_msg.frame_id, data)
         pass
 
     def send_to_can(self, msg_id, data):
