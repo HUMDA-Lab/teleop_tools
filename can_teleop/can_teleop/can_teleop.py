@@ -83,8 +83,8 @@ class CANDriverSender(Node):
         steering = ros_msg.axes[self.steering_axis] * self.steering_scale + self.steering_offset
         if steering >= 100.0:
             steering = 100.0
-        elif steering <= -100:
-            steering = -100
+        elif steering <= -100.0:
+            steering = -100.0
         throttle = ros_msg.axes[self.throttle_axis] * self.throttle_scale + self.throttle_offset
         
         self.gear = self.gear_box(ros_msg.buttons[self.shift_up_btn], ros_msg.buttons[self.shift_down_btn])
