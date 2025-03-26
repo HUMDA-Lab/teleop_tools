@@ -175,7 +175,7 @@ class CANDriverSender(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-    bus_name = 'vcan0'
+    bus_name = 'humda_vcan0'
     dbc_file_path = os.path.join(get_package_share_directory('can_teleop'), 'EAV24_CAN2.dbc')
     manager = CANDriverManager(bus_name, dbc_file_path)
     node = CANDriverSender(manager)
